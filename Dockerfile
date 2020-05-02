@@ -8,7 +8,7 @@ ENV TZ ${TZ}
 ENV SS_LIBEV_VERSION v3.3.4
 ENV KCP_VERSION 20200409
 ENV V2RAY_PLUGIN_VERSION v1.3.0
-ENV SS_DOWNLOAD_URL https://github.com/shadowsocks/shadowsocks-libev.git 
+ENV SS_DOWNLOAD_URL https://github.com/shadowsocks/shadowsocks-libev.git
 ENV KCP_DOWNLOAD_URL https://github.com/xtaci/kcptun/releases/download/v${KCP_VERSION}/kcptun-linux-amd64-${KCP_VERSION}.tar.gz
 ENV PLUGIN_OBFS_DOWNLOAD_URL https://github.com/shadowsocks/simple-obfs.git
 ENV PLUGIN_V2RAY_DOWNLOAD_URL https://github.com/shadowsocks/v2ray-plugin/releases/download/${V2RAY_PLUGIN_VERSION}/v2ray-plugin-linux-amd64-${V2RAY_PLUGIN_VERSION}.tar.gz
@@ -39,7 +39,7 @@ RUN apk upgrade \
     && (cd shadowsocks-libev \
     && git checkout tags/${SS_LIBEV_VERSION} -b ${SS_LIBEV_VERSION} \
     && git submodule update --init --recursive \
-    && && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DBUILD_STATIC=0 -DWITH_EMBEDDED_SRC=1 -DCMAKE_VERBOSE_MAKEFILE=1 \
+    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DBUILD_STATIC=0 -DWITH_EMBEDDED_SRC=1 -DCMAKE_VERBOSE_MAKEFILE=1 \
     && make install) \
     && git clone ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
