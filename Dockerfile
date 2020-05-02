@@ -38,13 +38,13 @@ RUN apk upgrade \
     && git checkout tags/${SS_LIBEV_VERSION} -b ${SS_LIBEV_VERSION} \
     && git submodule update --init --recursive \
     && ./autogen.sh \
-    && ./configure --disable-documentation --disable-ssp \
+    && ./configure --disable-documentation --disable-assert --disable-ssp \
     && make install) \
     && git clone ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && git submodule update --init --recursive \
     && ./autogen.sh \
-    && ./configure --disable-documentation --disable-ssp \
+    && ./configure --disable-documentation --disable-assert --disable-ssp \
     && make install) \
     && curl -o v2ray_plugin.tar.gz -sSL ${PLUGIN_V2RAY_DOWNLOAD_URL} \
     && tar -zxf v2ray_plugin.tar.gz \
