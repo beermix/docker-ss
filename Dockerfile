@@ -10,7 +10,7 @@ ENV SS_DOWNLOAD_URL https://github.com/shadowsocks/shadowsocks-libev.git
 ENV KCP_DOWNLOAD_URL https://github.com/xtaci/kcptun/releases/download/v${KCP_VERSION}/kcptun-linux-amd64-${KCP_VERSION}.tar.gz
 ENV PLUGIN_OBFS_DOWNLOAD_URL https://github.com/shadowsocks/simple-obfs.git
 ENV PLUGIN_V2RAY_DOWNLOAD_URL https://github.com/shadowsocks/v2ray-plugin/releases/download/${V2RAY_PLUGIN_VERSION}/v2ray-plugin-linux-amd64-${V2RAY_PLUGIN_VERSION}.tar.gz
-ENV LINUX_HEADERS_DOWNLOAD_URL=http://dl-cdn.alpinelinux.org/alpine/edge/main/x86_64/linux-headers-5.4.5-r1.apk
+#ENV LINUX_HEADERS_DOWNLOAD_URL=http://dl-cdn.alpinelinux.org/alpine/edge/main/x86_64/linux-headers-5.4.5-r1.apk
 
 RUN apk upgrade \
     && apk add bash tzdata rng-tools runit \
@@ -33,14 +33,17 @@ RUN apk upgrade \
         patch \
         sed \
         git \
-    && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-5.4.5-r1.apk \
-    && apk add --virtual .build-deps-kernel /linux-headers-5.4.5-r1.apk \
+        flex \
+        bison \
+        alpine-sdk \
+        linux-headers \
+        ca-certificates \
+        cmake \
     && apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing libcorkipset-dev libbloom-dev \
     &&  git clone --depth 1 ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
     && sed -i 's|AC_CONFIG_FILES(\[libbloom/Makefile libcork/Makefile libipset/Makefile\])||' configure.ac \
-    && ./autogen.sh \
-    && ./configure --prefix=/usr --disable-documentation --enable-shared --enable-system-shared-lib --disable-assert --disable-ssp \
+    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DWITH_EMBEDDED_SRC=0 -DWITH_SS_REDIR=0 -DWITH_STATIC=0 -DCMAKE_VERBOSE_MAKEFILE=0 \
     && make install -j2) \
     &&  git clone --depth 1 ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
@@ -67,7 +70,6 @@ RUN apk upgrade \
       $(scanelf --needed --nobanner /usr/bin/ss-* /usr/local/bin/obfs-* \
       | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
       | sort -u) \
-    && rm -rf /linux-headers-5.4.5-r1.apk \
         kcptun-linux-amd64-${KCP_VERSION}.tar.gz \
         shadowsocks-libev \
         simple-obfs \
