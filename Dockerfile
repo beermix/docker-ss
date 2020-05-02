@@ -42,7 +42,7 @@ RUN apk upgrade \
     && ./autogen.sh \
     && ./configure --prefix=/usr --disable-documentation --enable-shared --enable-system-shared-lib --disable-assert --disable-ssp \
     && make install -j2) \
-    &&  git clone --recursive --depth 1 ${PLUGIN_OBFS_DOWNLOAD_URL} \
+    &&  git clone --depth 1 ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && patch -p1 -i debian/patches/0001-Use-libcork-dev-in-system.patch \
     && ./autogen.sh \
