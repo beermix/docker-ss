@@ -36,7 +36,7 @@ RUN apk upgrade \
     && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-5.4.5-r1.apk \
     && apk add --virtual .build-deps-kernel /linux-headers-5.4.5-r1.apk \
     && apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing libcorkipset-dev libbloom-dev \
-    &&  git clone --recursive --depth 1 ${SS_DOWNLOAD_URL} \
+    &&  git clone --depth 1 ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
     && sed -i 's|AC_CONFIG_FILES(\[libbloom/Makefile libcork/Makefile libipset/Makefile\])||' configure.ac \
     && ./autogen.sh \
