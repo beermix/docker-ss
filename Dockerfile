@@ -29,7 +29,7 @@ RUN apk upgrade \
         mbedtls-dev \
         mbedtls-static \
         alpine-sdk \
-        cmake \a
+        cmake \
         pcre-dev \
         tar \
         git \
