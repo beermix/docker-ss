@@ -40,7 +40,7 @@ RUN apk upgrade \
     && (cd shadowsocks-libev \
     && sed -i 's|AC_CONFIG_FILES(\[libbloom/Makefile libcork/Makefile libipset/Makefile\])||' configure.ac \
     && ./autogen.sh \
-    && ./configure --prefix=/usr --disable-documentation --enable-shared --enable-system-shared-lib --disable-silent-rules --disable-assert --disable-ssp \
+    && ./configure --prefix=/usr --disable-documentation --enable-shared --enable-system-shared-lib --disable-assert --disable-ssp \
     && make install -j2) \
     &&  git clone --recursive --depth 1 ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
