@@ -39,13 +39,13 @@ RUN apk upgrade \
     && git submodule update --init --recursive \
     && ./autogen.sh \
     && ./configure --disable-documentation --disable-assert --disable-ssp \
-    && make install) \
+    && make install -j2) \
     && git clone ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && git submodule update --init --recursive \
     && ./autogen.sh \
     && ./configure --disable-documentation --disable-assert --disable-ssp \
-    && make install) \
+    && make install -j2) \
     && curl -o v2ray_plugin.tar.gz -sSL ${PLUGIN_V2RAY_DOWNLOAD_URL} \
     && tar -zxf v2ray_plugin.tar.gz \
     && mv v2ray-plugin_linux_amd64 /usr/bin/v2ray-plugin \
