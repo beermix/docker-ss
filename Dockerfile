@@ -10,7 +10,7 @@ ENV SS_DOWNLOAD_URL https://github.com/shadowsocks/shadowsocks-libev.git
 ENV KCP_DOWNLOAD_URL https://github.com/xtaci/kcptun/releases/download/v${KCP_VERSION}/kcptun-linux-amd64-${KCP_VERSION}.tar.gz
 ENV PLUGIN_OBFS_DOWNLOAD_URL https://github.com/shadowsocks/simple-obfs.git
 ENV PLUGIN_V2RAY_DOWNLOAD_URL https://github.com/shadowsocks/v2ray-plugin/releases/download/${V2RAY_PLUGIN_VERSION}/v2ray-plugin-linux-amd64-${V2RAY_PLUGIN_VERSION}.tar.gz
-ENV LINUX_HEADERS_DOWNLOAD_URL=http://dl-cdn.alpinelinux.org/alpine/edge/main/x86_64/linux-headers-5.4.5-r1.apk
+ENV LINUX_HEADERS_DOWNLOAD_URL=http://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/linux-headers-4.4.6-r2.apk
 
 RUN apk upgrade \
     && apk add bash tzdata rng-tools runit \
@@ -33,25 +33,23 @@ RUN apk upgrade \
         patch \
         sed \
         git \
-        flex \
-        bison \
         alpine-sdk \
         ca-certificates \
         cmake \
-    && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-5.4.5-r1.apk \
-    && apk add --virtual .build-deps-kernel /linux-headers-5.4.5-r1.apk \
+    && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-4.4.6-r2.apk \
+    && apk add --virtual .build-deps-kernel /linux-headers-4.4.6-r2.apk \
     && apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing libcorkipset-dev libbloom-dev \
     &&  git clone --depth 1 ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
     && sed -i 's|AC_CONFIG_FILES(\[libbloom/Makefile libcork/Makefile libipset/Makefile\])||' configure.ac \
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DWITH_EMBEDDED_SRC=0 -DWITH_SS_REDIR=0 -DWITH_STATIC=0 \
-    && make install -j2) \
+    && make install) \
     && git clone --depth 1 ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && patch -p1 -i debian/patches/0001-Use-libcork-dev-in-system.patch \
     && ./autogen.sh \
     && ./configure --disable-documentation --disable-ssp \
-    && make install -j2) \
+    && make install) \
     && curl -o v2ray_plugin.tar.gz -sSL ${PLUGIN_V2RAY_DOWNLOAD_URL} \
     && tar -zxf v2ray_plugin.tar.gz \
     && mv v2ray-plugin_linux_amd64 /usr/bin/v2ray-plugin \
@@ -71,7 +69,7 @@ RUN apk upgrade \
       $(scanelf --needed --nobanner /usr/bin/ss-* /usr/local/bin/obfs-* \
       | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
       | sort -u) \
-    && rm -rf /linux-headers-5.4.5-r1.apk \
+    && rm -rf /linux-headers-4.4.6-r2.apk \
         kcptun-linux-amd64-${KCP_VERSION}.tar.gz \
         shadowsocks-libev \
         simple-obfs \
