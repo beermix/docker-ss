@@ -65,7 +65,6 @@ RUN apk upgrade \
     && echo ${TZ} > /etc/timezone \
     && adduser -h /tmp -s /sbin/nologin -S -D -H shadowsocks \
     && adduser -h /tmp -s /sbin/nologin -S -D -H kcptun \
-    && apk del .build-deps .build-deps-kernel \
     && apk add --no-cache \
       $(scanelf --needed --nobanner /usr/bin/ss-* /usr/local/bin/obfs-* \
       | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
