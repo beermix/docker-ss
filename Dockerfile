@@ -30,19 +30,24 @@ RUN apk upgrade \
         udns-dev \
         gawk \
         tar \
+        patch \
+        sed \
         git \
     && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-5.4.5-r1.apk \
     && apk add --virtual .build-deps-kernel /linux-headers-5.4.5-r1.apk \
+    && apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing libcorkipset-dev libbloom-dev \
     && git clone ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
     && git checkout tags/${SS_LIBEV_VERSION} -b ${SS_LIBEV_VERSION} \
     && git submodule update --init --recursive \
+    && sed -i 's|AC_CONFIG_FILES(\[libbloom/Makefile libcork/Makefile libipset/Makefile\])||' configure.ac \
     && ./autogen.sh \
-    && ./configure --disable-documentation --disable-assert --disable-ssp \
+    && ./configure --disable-documentation -enable-shared --enable-system-shared-lib --disable-silent-rules --disable-assert --disable-ssp \
     && make install -j2) \
     && git clone ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && git submodule update --init --recursive \
+    && patch -p1 -i debian/patches/0001-Use-libcork-dev-in-system.patch \
     && ./autogen.sh \
     && ./configure --disable-documentation --disable-assert --disable-ssp \
     && make install -j2) \
