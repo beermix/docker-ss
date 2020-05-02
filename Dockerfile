@@ -1,8 +1,6 @@
-FROM alpine
+FROM alpine:3.7
 
-LABEL maintainer="mritd <mritd@linux.com>"
-
-ARG TZ='Asia/Shanghai'
+ARG TZ='Europe/Moscow'
 
 ENV TZ ${TZ}
 ENV SS_LIBEV_VERSION v3.3.4
