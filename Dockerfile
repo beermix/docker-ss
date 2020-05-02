@@ -27,6 +27,9 @@ RUN apk upgrade \
         libcap \
         libsodium-dev \
         mbedtls-dev \
+        mbedtls-static \
+        alpine-sdk \
+        cmake \a
         pcre-dev \
         tar \
         git \
@@ -36,14 +39,13 @@ RUN apk upgrade \
     && (cd shadowsocks-libev \
     && git checkout tags/${SS_LIBEV_VERSION} -b ${SS_LIBEV_VERSION} \
     && git submodule update --init --recursive \
-    && ./autogen.sh \
-    && ./configure --prefix=/usr --disable-documentation \
+    && && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DBUILD_STATIC=0 -DWITH_EMBEDDED_SRC=1 -DCMAKE_VERBOSE_MAKEFILE=1 \
     && make install) \
     && git clone ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && git submodule update --init --recursive \
     && ./autogen.sh \
-    && ./configure --disable-documentation \
+    && ./configure --disable-documentation --disable-assert --disable-ssp \
     && make install) \
     && curl -o v2ray_plugin.tar.gz -sSL ${PLUGIN_V2RAY_DOWNLOAD_URL} \
     && tar -zxf v2ray_plugin.tar.gz \
