@@ -1,4 +1,4 @@
-FROM alpine:3.11
+FROM alpine
 
 LABEL maintainer="mritd <mritd@linux.com>"
 
@@ -31,6 +31,8 @@ RUN apk upgrade \
         alpine-sdk \
         cmake \
         pcre-dev \
+        udns-dev \
+        gawk \
         tar \
         git \
     && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-4.4.6-r2.apk \
