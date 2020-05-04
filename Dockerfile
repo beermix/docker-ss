@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine
 
 ARG TZ='Europe/Moscow'
 
