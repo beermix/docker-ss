@@ -10,7 +10,7 @@ ENV SS_DOWNLOAD_URL https://github.com/shadowsocks/shadowsocks-libev.git
 ENV KCP_DOWNLOAD_URL https://github.com/xtaci/kcptun/releases/download/v${KCP_VERSION}/kcptun-linux-amd64-${KCP_VERSION}.tar.gz
 ENV PLUGIN_OBFS_DOWNLOAD_URL https://github.com/shadowsocks/simple-obfs.git
 ENV PLUGIN_V2RAY_DOWNLOAD_URL https://github.com/shadowsocks/v2ray-plugin/releases/download/${V2RAY_PLUGIN_VERSION}/v2ray-plugin-linux-amd64-${V2RAY_PLUGIN_VERSION}.tar.gz
-ENV LINUX_HEADERS_DOWNLOAD_URL=http://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/linux-headers-4.4.6-r2.apk
+ENV LINUX_HEADERS_DOWNLOAD_URL=http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/linux-headers-4.19.36-r0.apk
 
 RUN apk upgrade \
     && apk add bash tzdata rng-tools runit \
@@ -36,8 +36,8 @@ RUN apk upgrade \
         alpine-sdk \
         ca-certificates \
         cmake \
-    && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-4.4.6-r2.apk \
-    && apk add --virtual .build-deps-kernel /linux-headers-4.4.6-r2.apk \
+    && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-4.19.36-r0.apk \
+    && apk add --virtual .build-deps-kernel /linux-headers-4.19.36-r0.apk \
     && apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing libcorkipset-dev libbloom-dev \
     && git clone --depth 1 ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
@@ -68,7 +68,7 @@ RUN apk upgrade \
       $(scanelf --needed --nobanner /usr/bin/ss-* /usr/local/bin/obfs-* \
       | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
       | sort -u) \
-    && rm -rf /linux-headers-4.4.6-r2.apk \
+    && rm -rf /linux-headers-4.19.36-r0.apk \
         kcptun-linux-amd64-${KCP_VERSION}.tar.gz \
         shadowsocks-libev \
         simple-obfs \
