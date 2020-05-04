@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.12
 
 ARG TZ='Europe/Moscow'
 
@@ -39,16 +39,15 @@ RUN apk upgrade \
     && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-4.4.6-r2.apk \
     && apk add --virtual .build-deps-kernel /linux-headers-4.4.6-r2.apk \
     && apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing libcorkipset-dev libbloom-dev \
-    &&  git clone --depth 1 ${SS_DOWNLOAD_URL} \
+    && git clone --depth 1 ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
-    && sed -i 's|AC_CONFIG_FILES(\[libbloom/Makefile libcork/Makefile libipset/Makefile\])||' configure.ac \
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DWITH_EMBEDDED_SRC=0 -DWITH_SS_REDIR=0 -DWITH_STATIC=0 \
     && make install) \
     && git clone --depth 1 ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && patch -p1 -i debian/patches/0001-Use-libcork-dev-in-system.patch \
     && ./autogen.sh \
-    && ./configure --disable-documentation --disable-ssp \
+    && ./configure --disable-documentation --disable-assert --disable-ssp \
     && make install) \
     && curl -o v2ray_plugin.tar.gz -sSL ${PLUGIN_V2RAY_DOWNLOAD_URL} \
     && tar -zxf v2ray_plugin.tar.gz \
