@@ -1,4 +1,4 @@
-FROM alpine:3.11
+FROM alpine:edge
 
 ARG TZ='Europe/Moscow'
 
@@ -37,11 +37,11 @@ RUN apk upgrade --update \
         cmake \
     && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-4.19.36-r0.apk \
     && apk add --virtual .build-deps-kernel /linux-headers-4.19.36-r0.apk \
-    && git clone --recursive --depth 1 ${SS_DOWNLOAD_URL} \
+    && git clone --recursive ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
-    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DWITH_EMBEDDED_SRC=1 -DWITH_SS_REDIR=0 -DWITH_STATIC=1 \
-    && make && strip -s ./bin/ss-server && cp ./bin/ss-server /usr/bin/ss-server) \
-    && git clone --recursive --depth 1 ${PLUGIN_OBFS_DOWNLOAD_URL} \
+    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DWITH_EMBEDDED_SRC=1 -DWITH_SS_REDIR=0 -DWITH_STATIC=0 \
+    && make && strip -s ./shared/bin/ss-server && cp ./shared/bin/ss-server /usr/bin/ss-server) \
+    && git clone --recursive ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && ./autogen.sh \
     && ./configure --disable-documentation --disable-assert --disable-ssp \
