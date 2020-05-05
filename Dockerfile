@@ -46,7 +46,7 @@ RUN apk upgrade --update \
     && git clone --depth 1 --recursive ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
     && ./autogen.sh \
-    && ./configure --disable-documentation --disable-assert --disable-ssp \
+    && ./configure --prefix=/usr --disable-documentation --disable-assert --disable-ssp \
     && make install -j2) \
     && git clone --depth 1 --recursive ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
