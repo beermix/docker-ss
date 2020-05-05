@@ -32,6 +32,7 @@ RUN apk upgrade --update \
         tar \
         sed \
         git \
+        udns-dev \
         alpine-sdk \
         ca-certificates \
         cmake \
