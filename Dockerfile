@@ -6,6 +6,7 @@ ENV TZ ${TZ}
 ENV SS_LIBEV_VERSION v3.3.4
 ENV KCP_VERSION 20200409
 ENV V2RAY_PLUGIN_VERSION v1.3.0
+ENV SODIUM_DOWNLOAD_URL https://github.com/jedisct1/libsodium.git
 ENV SS_DOWNLOAD_URL https://github.com/shadowsocks/shadowsocks-libev.git
 ENV KCP_DOWNLOAD_URL https://github.com/xtaci/kcptun/releases/download/v${KCP_VERSION}/kcptun-linux-amd64-${KCP_VERSION}.tar.gz
 ENV PLUGIN_OBFS_DOWNLOAD_URL https://github.com/shadowsocks/simple-obfs.git
@@ -23,7 +24,6 @@ RUN apk upgrade --update \
         libev-dev \
         libtool \
         libcap \
-        libsodium-dev \
         mbedtls-dev \
         mbedtls-static \
         pcre-dev \
@@ -37,11 +37,16 @@ RUN apk upgrade --update \
         cmake \
     && curl -sSL ${LINUX_HEADERS_DOWNLOAD_URL} > /linux-headers-4.19.36-r0.apk \
     && apk add --virtual .build-deps-kernel /linux-headers-4.19.36-r0.apk \
-    && git clone --recursive ${SS_DOWNLOAD_URL} \
+    && git clone --depth 1 ${SODIUM_DOWNLOAD_URL} -b stable \
+    && (cd libsodium \
+    && ./autogen.sh \
+    && ./configure --prefix=/usr --enable-opt --enable-minimal --enable-static --enable-shared \
+    && make install) \
+    && git clone --depth 1 --recursive ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
-    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DWITH_EMBEDDED_SRC=1 -DWITH_SS_REDIR=0 -DWITH_STATIC=0 \
+    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DWITH_EMBEDDED_SRC=1 -DWITH_SS_REDIR=0 -DWITH_STATIC=1 \
     && make && strip -s ./shared/bin/ss-server && cp ./shared/bin/ss-server /usr/bin/ss-server) \
-    && git clone --recursive ${PLUGIN_OBFS_DOWNLOAD_URL} \
+    && git clone --depth 1 --recursive ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && ./autogen.sh \
     && ./configure --disable-documentation --disable-assert --disable-ssp \
