@@ -45,7 +45,7 @@ RUN apk upgrade --update \
     && git clone --depth 1 --recursive ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DWITH_EMBEDDED_SRC=1 -DWITH_SS_REDIR=0 -DWITH_STATIC=1 \
-    && make && strip -s ./shared/bin/ss-server && cp ./shared/bin/ss-server /usr/bin/ss-server) \
+    && make && strip -s ./bin/ss-server && cp ./bin/ss-server /usr/bin/ss-server) \
     && git clone --depth 1 --recursive ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && ./autogen.sh \
