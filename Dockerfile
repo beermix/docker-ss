@@ -41,16 +41,16 @@ RUN apk upgrade --update \
     && (cd libsodium \
     && ./autogen.sh \
     && ./configure --prefix=/usr --enable-opt --enable-minimal --enable-static --enable-shared \
-    && make install) \
+    && make install -j2) \
     && git clone --depth 1 --recursive ${SS_DOWNLOAD_URL} \
     && (cd shadowsocks-libev \
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DWITH_EMBEDDED_SRC=1 -DWITH_SS_REDIR=0 -DWITH_STATIC=1 \
-    && make && strip -s ./bin/ss-server && cp ./bin/ss-server /usr/bin/ss-server) \
+    && make -j2 && strip -s ./bin/ss-server && cp ./bin/ss-server /usr/bin/ss-server) \
     && git clone --depth 1 --recursive ${PLUGIN_OBFS_DOWNLOAD_URL} \
     && (cd simple-obfs \
     && ./autogen.sh \
     && ./configure --disable-documentation --disable-assert --disable-ssp \
-    && make install) \
+    && make install -j2) \
     && curl -o v2ray_plugin.tar.gz -sSL ${PLUGIN_V2RAY_DOWNLOAD_URL} \
     && tar -zxf v2ray_plugin.tar.gz \
     && mv v2ray-plugin_linux_amd64 /usr/bin/v2ray-plugin \
